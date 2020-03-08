@@ -10,6 +10,7 @@ class NetworkBuilder {
         const val BASE_APPID_TEST = "b6907d289e10d714a6e88b30761fae22"
         const val BASE_APPID = "734f430b1244d7304e01fe19fde105a9"
         const val BASE_URL = "https://samples.openweathermap.org/"
+        const val BASE_URL_ONLINE = "https://samples.openweathermap.org/"
 
     }
 
