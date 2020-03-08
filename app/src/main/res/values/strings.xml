@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Weather Logger</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+
+    <string name="home_second">Home Second</string>
+    <string name="temp_txt">Temperature</string>
+    <string name="date_txt">Date</string>
+    <string name="loading_weather">Loading Day Weather</string>
+    <string name="more_details">More Details</string>
+    <string name="check_connection">Check Network Connection</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="action_save">Save</string>
+    <string name="done_save_data">Done Save Data</string>
+    <string name="no_data_saved">No data saved to local</string>
+    <string name="load_local_data">"Get data from local saved data "</string>
+</resources>
