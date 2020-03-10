@@ -22,4 +22,5 @@
     <string name="done_save_data">Done Save Data</string>
     <string name="no_data_saved">No data saved to local</string>
     <string name="load_local_data">"Get data from local saved data "</string>
+    <string name="weather_details">Weather Details</string>
 </resources>

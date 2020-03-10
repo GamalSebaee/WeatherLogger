@@ -10,7 +10,7 @@
 
         <variable
             name="weatherDataResponse"
-            type="com.app.weatherapp.data.remote.WeatherDataResponse" />
+            type="com.app.weatherapp.data.remote.models.WeatherDataResponse" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"

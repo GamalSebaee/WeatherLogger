@@ -4,5 +4,9 @@ import java.text.DecimalFormat
 
 class WeatherDegreeConverter {
 
-    fun convertKelvinToCelsius(kelvinDegree : Double)  : Double = DecimalFormat("#.##").format((kelvinDegree - 273.15)).toDouble()
+    fun convertKelvinToCelsius(kelvinDegree : Double?)  : Double {
+          return kelvinDegree?.let {
+              DecimalFormat("#.##").format((it - 273.15)).toDouble()
+          } ?: 0.0
+    }
 }

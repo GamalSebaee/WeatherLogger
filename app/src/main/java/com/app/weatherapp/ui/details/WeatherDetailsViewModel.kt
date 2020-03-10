@@ -1,17 +1,12 @@
 package com.app.weatherapp.ui.details
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.app.weatherapp.data.remote.WeatherDataResponse
-import com.app.weatherapp.data.remote.models.WindEntity
-import com.app.weatherapp.data.remote.network.NetworkBuilder
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.lang.Exception
+import com.app.weatherapp.data.remote.models.WeatherDataResponse
 
-class WeatherDetailsViewModel : ViewModel() {
+class WeatherDetailsViewModel(application: Application) : AndroidViewModel(application) {
 
     var weatherDataResponse: MutableLiveData<WeatherDataResponse> = MutableLiveData()
     var otherWeatherData: MutableLiveData<String> = MutableLiveData()

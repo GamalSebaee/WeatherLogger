@@ -18,7 +18,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.app.weatherapp.R
 import com.app.weatherapp.data.local.ShardPreferenceUtil
-import com.app.weatherapp.data.remote.WeatherDataResponse
+import com.app.weatherapp.data.remote.models.WeatherDataResponse
 import com.app.weatherapp.databinding.FragmentHomeBinding
 import com.app.weatherapp.utils.*
 import com.google.gson.Gson
@@ -32,8 +32,9 @@ class HomeFragment : Fragment() {
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var fragmentHomeBinding: FragmentHomeBinding
     lateinit var mFusedLocationClient: FusedLocationProviderClient
+
     private val sherdPrefferanceUtil by lazy {
-        ShardPreferenceUtil(context!!)
+        ShardPreferenceUtil(requireContext())
     }
 
     override fun onCreateView(
@@ -49,7 +50,7 @@ class HomeFragment : Fragment() {
         fragmentHomeBinding.isLoading = false
         fragmentHomeBinding.noData = false
         fragmentHomeBinding.noDataTxt = "no data"
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(context!!)
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         return fragmentHomeBinding.root
     }
 
@@ -89,7 +90,8 @@ class HomeFragment : Fragment() {
             fragmentHomeBinding.noData = false
             val mainTemp = it.main
             mainTemp.tempCelsius = WeatherDegreeConverter().convertKelvinToCelsius(mainTemp.temp)
-            mainTemp.dateTimeTxt = DateUtils().getCurrentDate()
+            mainTemp.dateTimeTxt = DateUtils().getCurrentDate() + " - "+homeViewModel.loc_lat+
+             " - "+homeViewModel.loc_lng
             fragmentHomeBinding.mainEntity = mainTemp
         })
         homeViewModel.errorTxt.observe(viewLifecycleOwner, Observer {
@@ -100,8 +102,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun useCurrentLocation() {
-        if (LocationPermissionsUtil().checkPermissions(context!!)) {
-            if (LocationPermissionsUtil().isLocationEnabled(context!!)) {
+        fragmentHomeBinding.noData = true
+        if (LocationPermissionsUtil().checkPermissions(requireContext())) {
+            if (LocationPermissionsUtil().isLocationEnabled(requireContext())) {
                 mFusedLocationClient.lastLocation.addOnCompleteListener { task ->
                     val location: Location? = task.result
                     if (location == null) {
@@ -113,12 +116,13 @@ class HomeFragment : Fragment() {
                     }
                 }
             } else {
-                Toast.makeText(context, "Turn on location", Toast.LENGTH_LONG).show()
+                homeViewModel.errorTxt.value = "Turn on location"
                 val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                 startActivity(intent)
             }
         } else {
             requestPermissions()
+            homeViewModel.errorTxt.value = "Permission denied"
         }
     }
 
@@ -130,7 +134,7 @@ class HomeFragment : Fragment() {
         mLocationRequest.fastestInterval = 0
         mLocationRequest.numUpdates = 1
 
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(context!!)
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         mFusedLocationClient.requestLocationUpdates(
             mLocationRequest, mLocationCallback,
             Looper.myLooper()

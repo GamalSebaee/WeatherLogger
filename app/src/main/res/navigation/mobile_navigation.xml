@@ -8,9 +8,12 @@
     <fragment
         android:id="@+id/nav_home"
         android:name="com.app.weatherapp.ui.home.HomeFragment"
-        android:label="@string/menu_home"
+        android:label="@string/app_name"
+        app:enterAnim="@anim/in_from_left"
+        app:exitAnim="@anim/out_to_right"
+        app:popEnterAnim="@anim/in_from_left"
+        app:popExitAnim="@anim/in_from_right"
         tools:layout="@layout/fragment_home">
-
         <action
             android:id="@+id/action_nav_home_to_weatherDetailsFragment"
             app:destination="@id/weatherDetailsFragment" />
@@ -18,19 +21,29 @@
             android:id="@+id/deepLink2"
             app:uri="https://samples.openweathermap.org/data/2.5/weather?lat={lat}&amp;lon={lng}&amp;appid={appid}" />
 
-        <argument android:name="lat" app:argType="string"/>
-        <argument android:name="lng" app:argType="string"/>
-        <argument android:name="appid" app:argType="string"/>
+        <argument
+            android:name="lat"
+            app:argType="string" />
+        <argument
+            android:name="lng"
+            app:argType="string" />
+        <argument
+            android:name="appid"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/weatherDetailsFragment"
         android:name="com.app.weatherapp.ui.details.WeatherDetailsFragment"
-        tools:layout="@layout/fragment_weather_details"
+        android:label="@string/weather_details"
+        app:enterAnim="@anim/in_from_left"
+        app:exitAnim="@anim/out_to_right"
+        app:popEnterAnim="@anim/in_from_left"
+        app:popExitAnim="@anim/in_from_right"
         app:popUpTo="@+id/nav_home"
-        android:label="WeatherDetailsFragment" >
+        tools:layout="@layout/fragment_weather_details">
         <argument
             android:name="weather_data"
-            app:argType="com.app.weatherapp.data.remote.WeatherDataResponse" />
+            app:argType="com.app.weatherapp.data.remote.models.WeatherDataResponse" />
     </fragment>
 
 
