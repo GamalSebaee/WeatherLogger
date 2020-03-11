@@ -1,24 +1,20 @@
 package com.app.weatherapp.data
 
 import androidx.lifecycle.MutableLiveData
+import com.app.weatherapp.data.local.WeatherDao
 import com.app.weatherapp.data.remote.models.WeatherDataResponse
 import com.app.weatherapp.data.remote.network.ApiInterface
-import com.app.weatherapp.data.remote.network.NetworkBuilder
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 interface WeatherRepository {
     fun getWeatherData(lat: Double, lon: Double, appid: String)
 
-    class WeatherRemoteData( apiInterface2: ApiInterface ) : WeatherRepository {
-        var apiInterface=apiInterface2
+    class WeatherRemoteData(var apiInterface: ApiInterface,var handler :CoroutineExceptionHandler) : WeatherRepository {
         var errorTxt: MutableLiveData<String> = MutableLiveData()
         var weatherDataResponse: MutableLiveData<WeatherDataResponse> = MutableLiveData()
 
         override fun getWeatherData(lat: Double, lon: Double, appid: String) {
-            CoroutineScope(Dispatchers.IO).launch {
+            CoroutineScope(Dispatchers.IO+ handler).launch {
                 val dataResponse = apiInterface.getWeatherData(lat, lon, appid)
                 withContext(Dispatchers.Main) {
                     if (dataResponse.isSuccessful) {
@@ -36,6 +32,31 @@ interface WeatherRepository {
                 }
             }
         }
+
+    }
+
+    class WeatherLocalData(private var weatherDao: WeatherDao,var handler :CoroutineExceptionHandler) {
+        fun getWeatherData(weatherDataResponse: MutableLiveData<WeatherDataResponse>) {
+            CoroutineScope(Dispatchers.IO + handler).launch {
+                val weatherData = weatherDao.getWeatherData()
+                if(weatherData != null){
+                    withContext(Dispatchers.Main){
+                        weatherDataResponse.value=weatherData
+                    }
+                }else{
+                    handler.handleException(Dispatchers.IO,Throwable(" no data saved "))
+                }
+
+
+            }
+        }
+
+        fun saveWeatherData(weatherDataResponse:WeatherDataResponse) {
+          CoroutineScope(Dispatchers.IO).launch{
+               weatherDao.insert(weatherDataResponse)
+          }
+        }
+
 
     }
 }

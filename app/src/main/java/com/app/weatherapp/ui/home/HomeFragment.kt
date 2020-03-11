@@ -18,10 +18,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.app.weatherapp.R
 import com.app.weatherapp.data.local.ShardPreferenceUtil
-import com.app.weatherapp.data.remote.models.WeatherDataResponse
 import com.app.weatherapp.databinding.FragmentHomeBinding
 import com.app.weatherapp.utils.*
-import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_home.*
 import android.provider.Settings
 import com.google.android.gms.location.*
@@ -87,15 +85,20 @@ class HomeFragment : Fragment() {
     private fun listonToUpdates() {
         homeViewModel.weatherDataResponse.observe(viewLifecycleOwner, Observer {
             fragmentHomeBinding.isLoading = false
-            fragmentHomeBinding.noData = false
-            val mainTemp = it.main
-            mainTemp.tempCelsius = WeatherDegreeConverter().convertKelvinToCelsius(mainTemp.temp)
-            mainTemp.dateTimeTxt = DateUtils().getCurrentDate() + " - "+homeViewModel.loc_lat+
-             " - "+homeViewModel.loc_lng
-            fragmentHomeBinding.mainEntity = mainTemp
+            if(it != null){
+                fragmentHomeBinding.noData = false
+                val mainTemp = it.main
+                mainTemp.tempCelsius = WeatherDegreeConverter().convertKelvinToCelsius(mainTemp.temp)
+                mainTemp.dateTimeTxt = DateUtils().getCurrentDate()
+                fragmentHomeBinding.mainEntity = mainTemp
+            }else{
+                fragmentHomeBinding.noData = true
+            }
+
         })
         homeViewModel.errorTxt.observe(viewLifecycleOwner, Observer {
             fragmentHomeBinding.isLoading = false
+
             fragmentHomeBinding.noDataTxt = it
         })
 
@@ -158,29 +161,24 @@ class HomeFragment : Fragment() {
     private fun loadDataFromLocal() {
         Toast.makeText(activity, resources.getString(R.string.load_local_data), Toast.LENGTH_LONG)
             .show()
-        val dataModleString =
-            sherdPrefferanceUtil.getModelData(AppConstants.SherdPrefferanceKeys.WEATHER_DATA)
-        val dataModel = Gson().fromJson(dataModleString, WeatherDataResponse::class.java)
-        fragmentHomeBinding.isLoading = false
-        if (dataModel != null) {
-            fragmentHomeBinding.noData = false
-            homeViewModel.weatherDataResponse.value = dataModel
 
-        } else {
-            fragmentHomeBinding.noData = true
-            homeViewModel.errorTxt.value = resources.getString(R.string.no_data_saved) + " \n " +
-                    resources.getString(R.string.check_connection)
-        }
+        fragmentHomeBinding.isLoading = false
+        fragmentHomeBinding.noData = false
+        homeViewModel.getWeatherData_Local()
+
 
     }
 
     private fun saveDataToLocal() {
-        sherdPrefferanceUtil.saveModelData(
-            AppConstants.SherdPrefferanceKeys.WEATHER_DATA,
-            homeViewModel.weatherDataResponse.value
-        )
-        Toast.makeText(activity, resources.getString(R.string.done_save_data), Toast.LENGTH_LONG)
-            .show()
+        if(homeViewModel.weatherDataResponse.value != null){
+            homeViewModel.saveWeatherData(homeViewModel.weatherDataResponse.value)
+            Toast.makeText(activity, resources.getString(R.string.done_save_data), Toast.LENGTH_LONG)
+                .show()
+        }else{
+            Toast.makeText(activity, resources.getString(R.string.no_data_to_save), Toast.LENGTH_LONG)
+                .show()
+        }
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -189,8 +187,8 @@ class HomeFragment : Fragment() {
                 saveDataToLocal()
             R.id.action_refresh ->
                 useCurrentLocation()
-            else -> {
-            }
+            R.id.action_getLocal ->
+                homeViewModel.getWeatherData_Local()
         }
         return false
     }
