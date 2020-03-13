@@ -1,5 +1,5 @@
 # WeatherLogger
-/* this is file contains what is finished with this task 
+ this is file contains what is finished with this task 
 libraries used 
 1- Room database : to save local data.
 2- Jetpack libraries .
