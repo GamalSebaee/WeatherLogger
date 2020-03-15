@@ -38,7 +38,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     var loc_lng: Double = 0.0
 
     init {
-        val weatherDao = WeatherRoomDatabase.getDatabase(application).wordDao()
+        val weatherDao = WeatherRoomDatabase.getDatabase(application).weatherDao()
         weatherLocalData = WeatherRepository.WeatherLocalData(weatherDao, handler_local)
     }
 
@@ -51,10 +51,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         weatherLocalData.getWeatherData(weatherDataResponse)
     }
 
-    fun saveWeatherData(weatherDataResponse: WeatherDataResponse?) {
-        if (weatherDataResponse != null) {
-            weatherLocalData.saveWeatherData(weatherDataResponse)
-        }
+    fun saveWeatherData(weatherDataResponse: WeatherDataResponse) {
+        weatherLocalData.saveWeatherData(weatherDataResponse)
     }
 
 

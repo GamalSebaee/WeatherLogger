@@ -171,7 +171,7 @@ class HomeFragment : Fragment() {
 
     private fun saveDataToLocal() {
         if(homeViewModel.weatherDataResponse.value != null){
-            homeViewModel.saveWeatherData(homeViewModel.weatherDataResponse.value)
+            homeViewModel.saveWeatherData(homeViewModel.weatherDataResponse.value!!)
             Toast.makeText(activity, resources.getString(R.string.done_save_data), Toast.LENGTH_LONG)
                 .show()
         }else{

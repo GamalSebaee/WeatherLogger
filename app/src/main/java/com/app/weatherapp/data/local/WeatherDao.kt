@@ -9,11 +9,10 @@ import com.app.weatherapp.data.remote.models.WeatherDataResponse
 interface WeatherDao {
 
     @Query("SELECT * from weather_table ")
-    fun getWeatherData() : WeatherDataResponse
+    fun getWeatherData(): WeatherDataResponse
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(weatherDataResponse: WeatherDataResponse) : Long
-
+    suspend fun insert(weatherDataResponse: WeatherDataResponse): Long
 
     @Query("DELETE FROM weather_table")
     suspend fun deleteAll()

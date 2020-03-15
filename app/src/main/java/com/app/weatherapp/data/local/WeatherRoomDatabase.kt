@@ -12,7 +12,7 @@ import com.app.weatherapp.utils.DataTypeConverter
 @TypeConverters(DataTypeConverter::class)
 public abstract class WeatherRoomDatabase : RoomDatabase() {
 
-    abstract fun wordDao(): WeatherDao
+    abstract fun weatherDao(): WeatherDao
 
     companion object {
         // Singleton prevents multiple instances of database opening at the
