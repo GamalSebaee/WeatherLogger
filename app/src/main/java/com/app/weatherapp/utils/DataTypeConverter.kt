@@ -1,5 +1,6 @@
 package com.app.weatherapp.utils
 
+import android.util.Log
 import androidx.room.TypeConverter
 import com.app.weatherapp.data.remote.models.*
 import com.google.gson.Gson
@@ -43,8 +44,16 @@ class DataTypeConverter {
 
     @TypeConverter
     fun typeConverterToEntity_WeatherList(dataClass: String?): List<WeatherEntity>? {
+        Log.d("dataClass",""+dataClass)
+        if(!dataClass.isNullOrEmpty()){
 
-        return Gson().fromJson(dataClass, Array<WeatherEntity>::class.java).asList()
+            return Gson().fromJson(dataClass, Array<WeatherEntity>::class.java)?.asList() ?: null
+        }else{
+            Log.d("dataClass","outside")
+            return ArrayList()
+        }
+
+
     }
 
 

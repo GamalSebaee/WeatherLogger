@@ -84,9 +84,10 @@ data class WeatherDataResponse(
     companion object {
         fun createDummyData(): WeatherDataResponse {
             return WeatherDataResponse(
-                0,
+                1,
                 CoordEntity(30.0, 30.0), null, "base value"
-                , MainEntity(50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0),
+                , MainEntity(50.0, 50.0, 50.0, 50.0,
+                    50.0, 50.0, 50.0),
                 WindEntity(50.0, 10), CloudsEntity(12), 12,
                 SysEntity(50.0, "country", 12, 12),
                 12, "name dummy", "message dummy", 10
