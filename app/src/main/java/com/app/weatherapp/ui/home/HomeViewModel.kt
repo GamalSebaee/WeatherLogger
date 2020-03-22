@@ -12,6 +12,7 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.math.ln
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -21,7 +22,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     val handler_local = CoroutineExceptionHandler { _, exception ->
         viewModelScope.launch {
             withContext(Dispatchers.Main) {
-                weatherDataResponse.value=null
+                weatherDataResponse.value = null
                 errorTxt.value = ("Caught ${exception.message}")
             }
         }
@@ -55,6 +56,12 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         weatherLocalData.saveWeatherData(weatherDataResponse)
     }
 
+    fun checkDataStatus(lat: Double, lng: Double): String? {
+        return when {
+            (lat > 0 && lng > 0) -> "remote"
+            else -> "local"
+        }
+    }
 
 
 }
