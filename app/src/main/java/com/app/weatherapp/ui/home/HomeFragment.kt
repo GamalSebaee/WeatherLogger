@@ -15,13 +15,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import com.app.weatherapp.R
 import com.app.weatherapp.data.local.ShardPreferenceUtil
 import com.app.weatherapp.databinding.FragmentHomeBinding
 import com.app.weatherapp.utils.*
-import kotlinx.android.synthetic.main.fragment_home.*
 import android.provider.Settings
+import androidx.navigation.findNavController
 import com.google.android.gms.location.*
 
 class HomeFragment : Fragment() {
@@ -39,7 +38,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         homeViewModel =
             ViewModelProvider(this).get(HomeViewModel::class.java)
@@ -59,7 +58,7 @@ class HomeFragment : Fragment() {
         getSendedArguments()
         listonToUpdates()
 
-        tv_moreDetails.setOnClickListener {
+        fragmentHomeBinding.tvMoreDetails.setOnClickListener {
             val action =
                 HomeFragmentDirections.actionNavHomeToWeatherDetailsFragment(homeViewModel.weatherDataResponse.value!!)
             it.findNavController().navigate(action)
@@ -108,6 +107,23 @@ class HomeFragment : Fragment() {
         fragmentHomeBinding.noData = true
         if (LocationPermissionsUtil().checkPermissions(requireContext())) {
             if (LocationPermissionsUtil().isLocationEnabled(requireContext())) {
+                if (ActivityCompat.checkSelfPermission(
+                        requireContext(),
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                        requireContext(),
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return
+                }
                 mFusedLocationClient.lastLocation.addOnCompleteListener { task ->
                     val location: Location? = task.result
                     if (location == null) {
